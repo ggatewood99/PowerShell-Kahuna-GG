@@ -1,19 +1,18 @@
-import-module activedirectory
+Import-Module ActiveDirectory
 
 $OUName = "London"
 $DomainDN = "DC=Adatum,DC=com"
 $OUPath = "OU=$OUName,$DomainDN"
 
-foreach ($OU in Get-ADOrganizationalUnit -Filter * -SearchBase "DC=Adatum,DC=com")
-{
-    if ($OU.DistinguishedName -eq "OU=$OUName,$DomainDN")
-    {
-        Write-Host "OU already exists"
-    }
-    else
-    {
-        New-ADOrganizationalUnit -name $OUName -path $OUPath
-        Write-Host "OU created"
-    }
+# Check if the OU already exists
+$existingOU = Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$OUPath'" -SearchBase $DomainDN
+
+if ($existingOU) {
+    Write-Host "OU already exists"
+} else {
+    New-ADOrganizationalUnit -Name $OUName -Path $DomainDN
+    Write-Host "OU created"
 }
-Get-ADOrganizationalUnit -Filter * -SearchBase "DC=Adatum,DC=com" | Select-Object Name, DistinguishedName
+
+# List all OUs in the domain
+Get-ADOrganizationalUnit -Filter * -SearchBase $DomainDN | Select-Object Name, DistinguishedName
