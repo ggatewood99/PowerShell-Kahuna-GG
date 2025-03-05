@@ -30,3 +30,16 @@ if ($existinggroup) {
     Write-Output "Group created"
 }
 
+
+$LondonUsers = Get-ADUser -Filter {city -eq "London"} -Properties City
+foreach ($user in $LondonUsers) {
+    # Move user to the London OU
+    Move-ADObject -Identity $user -TargetPath $OUPath
+    Write-Output "User moved to OU"
+
+    # Adding user to the London Group
+    Add-ADGroupMember -Identity $GroupName -Members $user
+    Write-Output "User added to group"
+}
+
+Get-ADUser -Filter {city -eq "London"} -Properties City | Select-Object Name, City | format-table
